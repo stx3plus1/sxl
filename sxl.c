@@ -29,6 +29,7 @@ int main(int argc, char **argv) {
                 distro = strtok(osline, "=");
                 distro = strtok(NULL, "=");
                 printf("\n%s%s", layout[0], distro);
+	        break;
 	    }
         }
     }
