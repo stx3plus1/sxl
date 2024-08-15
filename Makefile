@@ -1,12 +1,14 @@
 CC=cc
-CFLAGS=-std=c99
+CFLAGS=-std=c99 
 
-sxl: sxl.c
-    @$(CC) $@ S^ $(CFLAGS)
+.PHONY: sxl
 
-install: sxl
-    @mkdir -p /usr/local/bin
-    @cp $< /usr/local/bin
+sxl: sxl.c 
+	$(CC) -o $@ $^ $(CFLAGS)
+
+install: strlx
+	@mkdir -p /usr/local/bin
+	@cp $< /usr/local/bin/
 
 clean: sxl
-    rm $<
+	rm $<
