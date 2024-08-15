@@ -10,7 +10,6 @@ char layout[][64] = {
 };
 
 int main(int argc, char **argv) {
-    printf("%s", str)
     struct utsname kernel;
     uname(&kernel);
     // dist
