@@ -8,10 +8,10 @@
 #define write_str(fd, str) write(fd, str, strlen(str))
 
 char layout[][64] = {
-    "\x1b[0m   .-.  \x1b[0m\x1b[1;30m dis \x1b[31m| ",
-    "\x1b[0m   oo|  \x1b[0m\x1b[1;30m ker \x1b[32m| ",
-    "\x1b[0m  /`'\\  \x1b[0m\x1b[1;30m upt \x1b[34m| ",
-    "\x1b[0m (\\_;/) \x1b[0m\x1b[1;30m mem \x1b[35m| "
+    "\x1b[0m\x1b[43m   .-.  \x1b[0m dis \x1b[1;33m| ",
+    "\x1b[0m\x1b[43m   oo|  \x1b[0m ker \x1b[1;33m| ",
+    "\x1b[0m\x1b[46m  /`'\\  \x1b[0m upt \x1b[1;36m| ",
+    "\x1b[0m\x1b[46m (\\_;/) \x1b[0m mem \x1b[1;36m| "
 };
 
 int main() {
