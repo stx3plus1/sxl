@@ -95,6 +95,5 @@ int main() {
              (double)(total_memory - free_memory) / 1048576, 
              (double)total_memory / 1048576);
     write_str(fd, mem_str);
-
     return 0;
 }
