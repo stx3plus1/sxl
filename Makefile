@@ -1,9 +1,9 @@
-CC=cc
-CFLAGS=-std=c99 
+CC=clang
+CFLAGS=-std=c99 -Ofast
 
 .PHONY: sxl
 
-sxl: sxl.c 
+sxl: sxl.c
 	$(CC) -o $@ $^ $(CFLAGS)
 
 install: sxl
