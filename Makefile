@@ -6,7 +6,7 @@ CFLAGS=-std=c99
 sxl: sxl.c 
 	$(CC) -o $@ $^ $(CFLAGS)
 
-install: strlx
+install: sxl
 	@mkdir -p /usr/local/bin
 	@cp $< /usr/local/bin/
 
