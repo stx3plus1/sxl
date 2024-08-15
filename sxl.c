@@ -29,22 +29,20 @@ int main(int argc, char **argv) {
                 distro = strtok(osline, "=");
                 distro = strtok(NULL, "=");
                 printf("\n%s%s", layout[0], distro);
-            	goto cont;
 	    }
         }
     }
-    cont:
     // kern
     printf("%s%s\n", layout[1], kernel.release);
     // up
     printf("%s", layout[2]);
     long uptime_seconds = 0;
-    FILE *file = fopen("/proc/uptime", "r");
+    FILE *puptime = fopen("/proc/uptime", "r");
     double uptime;
-    fscanf(file, "%lf", &uptime);
-    fclose(file);
-    *uptime_seconds = (long)uptime;
-    int days = uptime_seconds / (60 * 60 * 
+    fscanf(puptime, "%lf", &uptime);
+    fclose(puptime);
+    uptime_seconds = (long)uptime;
+    int days = uptime_seconds / (60 * 60 * 24); 
     int hours = (uptime_seconds % (60 * 60 * 24)) / (60 * 60);
     int minutes = (uptime_seconds % (60 * 60)) / 60;
     if (days > 0) {
@@ -55,21 +53,17 @@ int main(int argc, char **argv) {
     }
     printf("%dm\n", minutes);
     // mem
-    FILE *file = fopen("/proc/meminfo", "r");
-    if (!file) {
-        return 1;
-    }
+    FILE *meminfo = fopen("/proc/meminfo", "r");
     char line[256];
     int total_memory = 0;
     int free_memory = 0;
-    while (fgets(line, sizeof(line), file)) {
+    while (fgets(line, sizeof(line), meminfo)) {
         if (strncmp(line, "MemTotal:", 9) == 0) {
             sscanf(line + 9, "%d", &total_memory);
         } else if (strncmp(line, "MemAvailable:", 8) == 0) {
             sscanf(line + 13, "%d", &free_memory);
         } 
     }
-    fclose(file);
+    fclose(meminfo);
     printf("%s%.2fGiB / %.2fGiB\n\n\x1b[0m", layout[3], (double)(total_memory - free_memory) / 1048576, (double)total_memory / 1048576);
-    return 0;
 }
