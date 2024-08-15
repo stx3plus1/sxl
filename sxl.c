@@ -14,20 +14,6 @@ char layout[4][64] = {
     "\x1b[0m\x1b[1;33m(\\\x1b[1;30m_;\x1b[1;33m/) \x1b[1;30m mem | "
 };
 
-bool get_system_uptime(long *uptime_seconds) {
-    FILE *file = fopen("/proc/uptime", "r");
-    if (file == NULL)
-        return false;
-    double uptime;
-    if (fscanf(file, "%lf", &uptime) != 1) {
-        fclose(file);
-        return false;
-    }
-    fclose(file);
-    *uptime_seconds = (long)uptime;
-    return true;
-}
-
 int main(int argc, char **argv) {
     struct utsname kernel;
     uname(&kernel);
@@ -53,20 +39,23 @@ int main(int argc, char **argv) {
     // up
     printf("%s", layout[2]);
     long uptime_seconds = 0;
-    if (get_system_uptime(&uptime_seconds)) {
-           int days = uptime_seconds / (60 * 60 * 24);
-        int hours = (uptime_seconds % (60 * 60 * 24)) / (60 * 60);
-        int minutes = (uptime_seconds % (60 * 60)) / 60;
-        if (days > 0) {
-                printf("%dd ", days);
-        }
-        if (hours > 0) {
-            printf("%dh ", hours);
-        }
-        printf("%dm\n", minutes);
+    FILE *file = fopen("/proc/uptime", "r");
+    double uptime;
+    fscanf(file, "%lf", &uptime) 
+    fclose(file);
+    *uptime_seconds = (long)uptime;
+    int days = uptime_seconds / (60 * 60 * 
+    int hours = (uptime_seconds % (60 * 60 * 24)) / (60 * 60);
+    int minutes = (uptime_seconds % (60 * 60)) / 60;
+    if (days > 0) {
+        printf("%dd ", days);
     }
+    if (hours > 0) {
+        printf("%dh ", hours);
+    }
+    printf("%dm\n", minutes);
     // mem
-     FILE *file = fopen("/proc/meminfo", "r");
+    FILE *file = fopen("/proc/meminfo", "r");
     if (!file) {
         return 1;
     }
