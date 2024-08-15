@@ -39,14 +39,15 @@ int main(int argc, char **argv) {
     } else {
         char osline[256];
         while (fgets(osline, 128, osrelease)) {
-            if (strstr(osline, "NAME")) {
-                distro = strtok(osline, "\"");
-                distro = strtok(NULL, "\"");
-                printf("\n%s%s\n", layout[0], distro);
-                fclose(osrelease);
-            }
+            if (strstr(osline, "ID")) {
+                distro = strtok(osline, "=");
+                distro = strtok(NULL, "=");
+                printf("\n%s%s", layout[0], distro);
+            	goto cont;
+	    }
         }
     }
+    cont:
     // kern
     printf("%s%s\n", layout[1], kernel.release);
     // up
@@ -80,6 +81,6 @@ int main(int argc, char **argv) {
         } 
     }
     fclose(file);
-    printf("%s%.2fGiB / %.2fGiB\n\n", layout[3], (double)(total_memory - free_memory) / 1048576, (double)total_memory / 1048576);
+    printf("%s%.2fGiB / %.2fGiB\n\n\x1b[0m", layout[3], (double)(total_memory - free_memory) / 1048576, (double)total_memory / 1048576);
     return 0;
 }
