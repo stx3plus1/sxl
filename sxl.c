@@ -3,23 +3,24 @@
 #include <sys/utsname.h>
 
 char layout[][64] = {
-    "\x1b[0m\x1b[47m   .-.  \x1b[0m\x1b[1;30m dis \x1b[31m| ",
-    "\x1b[0m\x1b[47m   oo|  \x1b[0m\x1b[1;30m ker \x1b[32m| ",
-    "\x1b[0m\x1b[47m  /`'\\  \x1b[0m\x1b[1;30m upt \x1b[34m| ",
-    "\x1b[0m\x1b[47m (\\_;/) \x1b[0m\x1b[1;30m mem \x1b[35m| "
+    "\x1b[0m\x1b[43m   .-.  \x1b[0m dis \x1b[1;33m| ",
+    "\x1b[0m\x1b[43m   oo|  \x1b[0m ker \x1b[1;33m| ",
+    "\x1b[0m\x1b[46m  /`'\\  \x1b[0m upt \x1b[1;36m| ",
+    "\x1b[0m\x1b[46m (\\_;/) \x1b[0m mem \x1b[1;36m| "
 };
 
 int main(int argc, char **argv) {
+    printf("%s", str)
     struct utsname kernel;
     uname(&kernel);
     // dist
     char* distro;
     FILE* osrelease = fopen("/etc/os-release", "r");
     if (!osrelease) {
-        printf("\n");
+        return 1;
     } else {
-        char osline[256];
-        while (fgets(osline, 128, osrelease)) {
+        char osline[64];
+        while (fgets(osline, 63, osrelease)) {
             if (strstr(osline, "ID")) {
                 distro = strtok(osline, "=");
                 distro = strtok(NULL, "=");
