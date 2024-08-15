@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
     long uptime_seconds = 0;
     FILE *file = fopen("/proc/uptime", "r");
     double uptime;
-    fscanf(file, "%lf", &uptime) 
+    fscanf(file, "%lf", &uptime);
     fclose(file);
     *uptime_seconds = (long)uptime;
     int days = uptime_seconds / (60 * 60 * 
