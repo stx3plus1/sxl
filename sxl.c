@@ -1,17 +1,12 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
-#include <stdbool.h>
-#include <fcntl.h>
 #include <sys/utsname.h>
-#include <sys/stat.h>
 
-char layout[4][64] = {
-    "\x1b[0m\x1b[1;30m  .-.  \x1b[1;30m dis | ",
-    "\x1b[0m  oo\x1b[1;30m|  \x1b[1;30m ker | ",
-    "\x1b[0m\x1b[1;37m /`'\\  \x1b[1;30m upt | ",
-    "\x1b[0m\x1b[1;33m(\\\x1b[1;30m_;\x1b[1;33m/) \x1b[1;30m mem | "
+char layout[][64] = {
+    "\x1b[0m\x1b[47m   .-.  \x1b[0m\x1b[1;30m dis \x1b[31m| ",
+    "\x1b[0m\x1b[47m   oo|  \x1b[0m\x1b[1;30m ker \x1b[32m| ",
+    "\x1b[0m\x1b[47m  /`'\\  \x1b[0m\x1b[1;30m upt \x1b[34m| ",
+    "\x1b[0m\x1b[47m (\\_;/) \x1b[0m\x1b[1;30m mem \x1b[35m| "
 };
 
 int main(int argc, char **argv) {
