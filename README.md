@@ -1,6 +1,6 @@
 # sxl
-Minimal system information progam.
+minimal system information progam.
 
-v0.3 currently has 70 lines total including comments and includes.
+latest currently has 65 lines total including comments and includes.
 
-There is a lack of error handling.
+there is a lack of error handling.
