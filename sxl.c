@@ -28,7 +28,7 @@ int main() {
         osline[n] = '\0';
         char *line = strtok(osline, "\n");
         while (line != NULL) {
-            if (strstr(line, "ID=" && !strstr(line, "\""))) {
+            if (strstr(line, "ID=") && !strstr(line, "\"")) {
                 char *distro = strtok(line, "=");
                 distro = strtok(NULL, "=");
                 write_str(fd, "\n");
