@@ -1,4 +1,4 @@
-CC=clang
+CC=cc
 CFLAGS=-std=c99 -Ofast
 
 .PHONY: sxl
