@@ -1,65 +1,99 @@
+/* 
+ * sxl 1.1
+ * by stx4
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <sys/utsname.h>
 
 char layout[][64] = {
-    "\x1b[0m\x1b[43m   .-.  \x1b[0m dis \x1b[1;33m| ",
-    "\x1b[0m\x1b[43m   oo|  \x1b[0m ker \x1b[1;33m| ",
-    "\x1b[0m\x1b[46m  /`'\\  \x1b[0m upt \x1b[1;36m| ",
-    "\x1b[0m\x1b[46m (\\_;/) \x1b[0m mem \x1b[1;36m| "
+    "\e[0m\e[43m   .-.  \e[0m dis \e[1;33m| ",
+    "\e[0m\e[43m   oo|  \e[0m ker \e[1;33m| ",
+    "\e[0m\e[46m  /`'\\  \e[0m upt \e[1;36m| ",
+    "\e[0m\e[46m (\\_;/) \e[0m mem \e[1;36m| "
 };
 
-int main(int argc, char **argv) {
-    struct utsname kernel;
-    uname(&kernel);
-    // dist
-    char* distro;
-    FILE* osrelease = fopen("/etc/os-release", "r");
-    if (!osrelease) {
-        return 1;
-    } else {
-        char osline[64];
-        while (fgets(osline, 63, osrelease)) {
-            if (strstr(osline, "ID")) {
-                distro = strtok(osline, "=");
-                distro = strtok(NULL, "=");
-                printf("\n%s%s", layout[0], distro);
-	        break;
-	    }
-        }
-    }
-    // kern
-    printf("%s%s\n", layout[1], kernel.release);
-    // up
-    printf("%s", layout[2]);
-    long uptime_seconds = 0;
-    FILE *puptime = fopen("/proc/uptime", "r");
-    double uptime;
-    fscanf(puptime, "%lf", &uptime);
-    fclose(puptime);
-    uptime_seconds = (long)uptime;
-    int days = uptime_seconds / (60 * 60 * 24); 
-    int hours = (uptime_seconds % (60 * 60 * 24)) / (60 * 60);
-    int minutes = (uptime_seconds % (60 * 60)) / 60;
-    if (days > 0) {
-        printf("%dd ", days);
-    }
-    if (hours > 0) {
-        printf("%dh ", hours);
-    }
-    printf("%dm\n", minutes);
-    // mem
-    FILE *meminfo = fopen("/proc/meminfo", "r");
-    char line[256];
-    int total_memory = 0;
-    int free_memory = 0;
-    while (fgets(line, sizeof(line), meminfo)) {
-        if (strncmp(line, "MemTotal:", 9) == 0) {
-            sscanf(line + 9, "%d", &total_memory);
-        } else if (strncmp(line, "MemAvailable:", 8) == 0) {
-            sscanf(line + 13, "%d", &free_memory);
-        } 
-    }
-    fclose(meminfo);
-    printf("%s%.2fGiB / %.2fGiB\n\n\x1b[0m", layout[3], (double)(total_memory - free_memory) / 1048576, (double)total_memory / 1048576);
+int main(void) {
+	struct utsname sys;
+	uname(&sys);
+
+	/* first blank */
+	printf("\n");
+
+	/* distro */
+	printf("%s", layout[0]);
+	char* distro;
+	FILE* osrelease = fopen("/etc/os-release", "r");
+	if (!osrelease) {
+		printf("%s\n", sys.sysname);
+	} else {
+		char osline[256];
+		while (fgets(osline, 128, osrelease)) {
+			if (strstr(osline, "ID")) {
+				distro = strtok(osline, "=");
+				distro = strtok(NULL, "=");
+				printf("%s", distro);
+				fclose(osrelease);
+				break;
+			}
+		}
+	}
+
+	/* kernel */
+	printf("%s%s\n", layout[1], sys.release);
+
+	/* uptime */
+	printf("%s", layout[2]);
+	FILE* uptime_file = fopen("/proc/uptime", "r");
+	if (uptime_file == NULL) {
+		printf("Error opening /proc/uptime.\e[0m\n");
+		return 1;
+	}
+	double uptime;
+	if (fscanf(uptime_file, "%lf", &uptime) != 1) {
+		fclose(uptime_file);
+		printf("Error parsing /proc/uptime.\e[0m\n");
+		return 1;
+	}
+	fclose(uptime_file);
+	long uptime_seconds = (long)uptime;
+
+	int days = uptime_seconds / (60 * 60 * 24);
+	int hours = (uptime_seconds % (60 * 60 * 24)) / (60 * 60);
+	int minutes = (uptime_seconds % (60 * 60)) / 60;
+	if (days > 0) printf("%dd ", days);
+	if (hours > 0) printf("%dh ", hours);
+	printf("%dm\n", minutes);
+
+	/* memory */
+	printf("%s", layout[3]);
+	FILE* meminfo = fopen("/proc/meminfo", "r");
+	if (!meminfo) {
+		printf("Error opening /proc/meminfo.\e[0m\n");
+		return 1;
+	}
+	char line[64];
+	char* totstr = "MemTotal:";
+	char* availstr = "MemAvailable:";
+	long total = -1, avail = -1;
+	while (fgets(line, sizeof(line), meminfo)) {
+		if (!strncmp(line, totstr, strlen(totstr))) {
+			sscanf(line, "MemTotal: %ld kB", &total);
+		}
+		if (!strncmp(line, availstr, strlen(availstr))) {
+			sscanf(line, "MemAvailable: %ld kB", &avail);
+		}
+	}
+
+	fclose(meminfo);
+
+	if (total == -1 || avail == -1) {
+		printf("Error parsing /proc/meminfo.\e[0m\n");
+		return 1;
+	}
+	printf("%.2f GiB / %.2f GiB\n", (total - avail) / 1048576.0, total / 1048576.0);
+
+	/* cleanup */
+	printf("\e[0m\n");
 }
