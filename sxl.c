@@ -55,10 +55,13 @@ int main(void) {
 	int minutes = (uptime % (60 * 60)) / 60;
 	if (days > 0) printf("%dd ", days);
 	if (hours > 0) printf("%dh ", hours);
-	printf("%dm\n", minutes);
+	if (minutes > 0) 
+		printf("%dm\n", minutes);
+	else
+		printf("%ds\n", (int)uptime);
 
 	/* memory */
-	unsigned long total = info.totalram * info.mem_unit, avail = info.freeram * info.mem_unit;
+	unsigned long total = info.totalram * info.mem_unit, avail = (info.freeram + info.bufferram + info.freeswap) * info.mem_unit;
 	printf("%s%.2f GiB / %.2f GiB\n", layout[3], (total - avail) / 1073741824.0, total / 1073741824.0);
 
 	printf("\e[0m\n");
